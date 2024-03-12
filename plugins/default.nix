@@ -7,6 +7,7 @@
 
     ./colorschemes/ayu.nix
     ./colorschemes/base16.nix
+    ./colorschemes/bamboo.nix
     ./colorschemes/catppuccin.nix
     ./colorschemes/dracula.nix
     ./colorschemes/gruvbox.nix

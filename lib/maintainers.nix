@@ -12,4 +12,10 @@
     githubId = 1176328;
     name = "Alison Jenkins";
   };
+  fergus-molloy = {
+    email = "fergus+nix@molloy.xyz";
+    github = "fergus-molloy";
+    githubId = 45051974;
+    name = "Fergus Molloy";
+  };
 }
