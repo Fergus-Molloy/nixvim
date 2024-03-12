@@ -57,8 +57,8 @@ with lib;
       colors = helpers.defaultNullOpts.mkAttrsOf types.str ''null'' ''
         Override default colors or set new ones
       '';
-      highlights = helpers.defaultNullOpts.mkAttrsOf types.str ''null'' ''
-        Override highlight groups
+      highlights = helpers.defaultNullOpts.mkAttrsOf (with types; attrsOf str) ''null'' ''
+        Override default colors or set new ones
       '';
 
       diagnostics = {
