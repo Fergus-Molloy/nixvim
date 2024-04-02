@@ -8,9 +8,11 @@
 with lib;
   helpers.neovim-plugin.mkNeovimPlugin config {
     name = "ayu";
-    namespace = "colorschemes";
+    isColorscheme = true;
     originalName = "neovim-ayu";
     defaultPackage = pkgs.vimPlugins.neovim-ayu;
+    # The colorscheme option is set by the `setup` function.
+    colorscheme = null;
     callSetup = false;
 
     maintainers = [maintainers.GaetanLepage];

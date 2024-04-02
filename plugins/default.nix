@@ -6,8 +6,8 @@
     ./bufferlines/navic.nix
 
     ./colorschemes/ayu.nix
-    ./colorschemes/base16.nix
     ./colorschemes/bamboo.nix
+    ./colorschemes/base16
     ./colorschemes/catppuccin.nix
     ./colorschemes/dracula.nix
     ./colorschemes/gruvbox.nix
@@ -21,6 +21,7 @@
     ./colorschemes/poimandres.nix
     ./colorschemes/rose-pine.nix
     ./colorschemes/tokyonight.nix
+    ./colorschemes/vscode.nix
 
     ./completion/codeium-vim.nix
     ./completion/copilot-lua.nix
@@ -29,6 +30,8 @@
     ./completion/coq-thirdparty.nix
     ./completion/lspkind.nix
     ./completion/cmp
+
+    ./dap
 
     ./filetrees/chadtree.nix
     ./filetrees/neo-tree.nix
@@ -42,7 +45,7 @@
     ./git/gitgutter.nix
     ./git/gitlinker.nix
     ./git/gitmessenger.nix
-    ./git/gitsigns.nix
+    ./git/gitsigns
     ./git/neogit
 
     ./languages/clangd-extensions.nix
@@ -60,6 +63,7 @@
     ./languages/openscad.nix
     ./languages/parinfer-rust.nix
     ./languages/plantuml-syntax.nix
+    ./languages/python/jupytext.nix
     ./languages/rust-tools.nix
     ./languages/rustaceanvim.nix
     ./languages/sniprun.nix
@@ -90,9 +94,9 @@
     ./lsp/trouble.nix
     ./lsp/wtf.nix
 
-    ./none-ls
+    ./neotest
 
-    ./dap
+    ./none-ls
 
     ./pluginmanagers/packer.nix
     ./pluginmanagers/lazy.nix
@@ -106,8 +110,14 @@
 
     ./telescope
 
+    ./ui/headlines.nix
     ./ui/image.nix
+    ./ui/neoscroll.nix
     ./ui/noice.nix
+    ./ui/transparent.nix
+    ./ui/twilight.nix
+    ./ui/virt-column.nix
+    ./ui/zen-mode.nix
 
     ./utils/alpha.nix
     ./utils/auto-save.nix
@@ -116,8 +126,9 @@
     ./utils/bacon.nix
     ./utils/baleia.nix
     ./utils/better-escape.nix
+    ./utils/ccc.nix
     ./utils/clipboard-image.nix
-    ./utils/comment-nvim.nix
+    ./utils/comment.nix
     ./utils/commentary.nix
     ./utils/conjure.nix
     ./utils/coverage.nix
@@ -159,7 +170,7 @@
     ./utils/nvim-colorizer.nix
     ./utils/nvim-osc52.nix
     ./utils/nvim-ufo.nix
-    ./utils/obsidian.nix
+    ./utils/obsidian
     ./utils/oil.nix
     ./utils/ollama.nix
     ./utils/persistence.nix
@@ -168,10 +179,12 @@
     ./utils/quickmath.nix
     ./utils/refactoring.nix
     ./utils/rest.nix
+    ./utils/sandwich.nix
+    ./utils/sleuth.nix
     ./utils/smart-splits.nix
     ./utils/specs.nix
     ./utils/spider.nix
-    ./utils/startify.nix
+    ./utils/startify
     ./utils/startup.nix
     ./utils/surround.nix
     ./utils/tmux-navigator.nix
@@ -179,10 +192,12 @@
     ./utils/toggleterm.nix
     ./utils/undotree.nix
     ./utils/vim-bbye.nix
+    ./utils/vim-css-color.nix
     ./utils/vim-matchup.nix
     ./utils/which-key.nix
     ./utils/wilder.nix
     ./utils/yanky.nix
+    ./utils/zellij.nix
     ./utils/zk.nix
   ];
 }

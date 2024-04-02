@@ -136,6 +136,7 @@ with lib; let
     gdformat = pkgs.gdtoolkit;
     gdlint = pkgs.gdtoolkit;
     gitsigns = pkgs.git;
+    gleam_format = pkgs.gleam;
     glslc = pkgs.shaderc;
     gn_format = pkgs.gn;
     gofmt = pkgs.go;
@@ -159,6 +160,7 @@ with lib; let
     phpcs = pkgs.phpPackages.php-codesniffer;
     prismaFmt = pkgs.nodePackages.prisma;
     ptop = pkgs.fpc;
+    puppet_lint = pkgs.puppet-lint;
     qmlformat = pkgs.qt6.qtdeclarative;
     qmllint = pkgs.qt6.qtdeclarative;
     racket_fixw = pkgs.racket;
@@ -184,6 +186,7 @@ with lib; let
     cljstyle = null;
     cueimports = null;
     erb_lint = null;
+    findent = null;
     forge_fmt = null;
     gccdiag = null;
     gersemi = null;
@@ -299,7 +302,7 @@ in {
     mkIf cfg.enable {
       # ASSERTIONS FOR DEVELOPMENT PURPOSES: Any failure should be caught by CI before deployment.
       # Ensure that the keys of the manually declared `builtinPackages` match the ones from upstream.
-      assertions = let
+      warnings = let
         upstreamToolNames = unique (
           flatten
           (
@@ -321,22 +324,23 @@ in {
           # Keep tool names which are not in upstream
           (toolName: !(elem toolName upstreamToolNames))
           localToolNames;
-      in [
-        {
-          assertion = (length undeclaredToolNames) == 0;
-          message = ''
-            Nixvim (plugins.none-ls): Some tools from upstream are not declared locally in `builtinPackages`.
+      in
+        (
+          optional
+          ((length undeclaredToolNames) > 0)
+          ''
+            [DEV] Nixvim (plugins.none-ls): Some tools from upstream are not declared locally in `builtinPackages`.
             -> [${concatStringsSep ", " undeclaredToolNames}]
-          '';
-        }
-        {
-          assertion = (length uselesslyDeclaredToolNames) == 0;
-          message = ''
-            Nixvim (plugins.none-ls): Some tools are declared locally but are not in the upstream list of supported plugins.
+          ''
+        )
+        ++ (
+          optional
+          ((length uselesslyDeclaredToolNames) > 0)
+          ''
+            [DEV] Nixvim (plugins.none-ls): Some tools are declared locally but are not in the upstream list of supported plugins.
             -> [${concatStringsSep ", " uselesslyDeclaredToolNames}]
-          '';
-        }
-      ];
+          ''
+        );
 
       plugins.none-ls.sourcesItems =
         builtins.map (

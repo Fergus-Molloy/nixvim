@@ -1,6 +1,6 @@
 {
   options = {
-    options = {
+    opts = {
       updatetime = 100; # Faster completion
 
       # Line numbers
@@ -11,12 +11,12 @@
       mousemodel = "extend"; # Mouse right-click extends the current selection
     };
 
-    localOptions = {
+    localOpts = {
       textwidth = 80;
       sidescrolloff = 0;
     };
 
-    globalOptions = {
+    globalOpts = {
       textwidth = 110;
       sidescrolloff = 10;
     };

@@ -211,6 +211,16 @@ with lib; let
       cmd = cfg: ["${cfg.package}/bin/elixir-ls"];
     }
     {
+      name = "fortls";
+      description = "fortls for Fortran";
+      cmd = cfg: [
+        "${cfg.package}/bin/fortls"
+        "--hover_signature"
+        "--hover_language=fortran"
+        "--use_signature_help"
+      ];
+    }
+    {
       name = "fsautocomplete";
       description = "fsautocomplete for F#";
       package = pkgs.fsautocomplete;
@@ -233,6 +243,12 @@ with lib; let
     {
       name = "gopls";
       description = "gopls for Go";
+    }
+    {
+      name = "golangci-lint-ls";
+      description = "golangci-lint-ls for Go";
+      serverName = "golangci_lint_ls";
+      package = pkgs.golangci-lint-langserver;
     }
     {
       name = "graphql";
@@ -543,6 +559,7 @@ with lib; let
       name = "rnix-lsp";
       description = "rnix LSP for Nix";
       serverName = "rnix";
+      package = null;
     }
     {
       name = "ruff-lsp";
@@ -572,6 +589,10 @@ with lib; let
       name = "sourcekit";
       description = "sourcekit language server for Swift and C/C++/Objective-C";
       package = pkgs.sourcekit-lsp;
+    }
+    {
+      name = "sqls";
+      description = "sqls for SQL";
     }
     {
       name = "svelte";
@@ -622,6 +643,11 @@ with lib; let
       description = "vala_ls for Vala";
       serverName = "vala_ls";
       package = pkgs.vala-language-server;
+    }
+    {
+      name = "vhdl-ls";
+      description = "vhdl_ls for VHDL";
+      serverName = "vhdl_ls";
     }
     {
       name = "vls";

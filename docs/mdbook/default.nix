@@ -5,6 +5,7 @@
   helpers,
   nixosOptionsDoc,
   transformOptions,
+  hmOptions,
 }:
 with lib; let
   options = lib.evalModules {
@@ -65,12 +66,14 @@ with lib; let
         if builtins.length path >= 2 && lib.hasAttrByPath path nixvimInfo
         then let
           info = lib.getAttrFromPath path nixvimInfo;
-          maintainers = lib.unique (options.config.meta.maintainers."${info.file}" or []);
+          maintainers = lib.unique (options.config.meta.maintainers.${info.file} or []);
+          maintainersNames = builtins.map (m: m.name) maintainers;
         in
           "# ${lib.last path}\n\n"
+          + (lib.optionalString (info.description != null) "${info.description}\n\n")
+          + (lib.optionalString (info.url != null) "**Url:** [${info.url}](${info.url})\n\n")
           + (lib.optionalString (builtins.length maintainers > 0)
-            "Maintainers: ${lib.concatStringsSep ", " (builtins.map (m: m.name) maintainers)}\n\n")
-          + (lib.optionalString (info.url != null) "Url: [${info.url}](${info.url})\n\n")
+            "**Maintainers:** ${lib.concatStringsSep ", " maintainersNames}\n\n")
         else null;
     };
 
@@ -200,14 +203,15 @@ with lib; let
           + (
             if opts.index.moduleDoc == null
             then "cp ${mkMDDoc opts.index.options} ${path}"
-            else ''
-              {
-              cat <<EOF
-              ${opts.index.moduleDoc}
-              EOF
-              cat ${mkMDDoc opts.index.options}
-              } > ${path}
-            ''
+            else
+              # Including moduleDoc's text directly will result in bash interpreting special chars,
+              # write it to the nix store and `cat` the file instead.
+              ''
+                {
+                cat ${pkgs.writeText "module-doc" opts.index.moduleDoc}
+                cat ${mkMDDoc opts.index.options}
+                } > ${path}
+              ''
           )
       )
       modules;
@@ -243,6 +247,7 @@ with lib; let
     cp -r --no-preserve=all $inputs/* ./
     cp ${../../CONTRIBUTING.md} ./CONTRIBUTING.md
     cp -r ${../user-guide} ./user-guide
+    cp -r ${../modules} ./modules
 
     # Copy the generated MD docs into the build directory
     # Using pkgs.writeShellScript helps to avoid the "bash: argument list too long" error
@@ -251,7 +256,10 @@ with lib; let
     # Prepare SUMMARY.md for mdBook
     # Using pkgs.writeText helps to avoid the same error as above
     substituteInPlace ./SUMMARY.md \
-      --replace "@NIXVIM_OPTIONS@" "$(cat ${pkgs.writeText "nixvim-options-summary.md" mdbook.nixvimOptions})"
+      --replace-fail "@NIXVIM_OPTIONS@" "$(cat ${pkgs.writeText "nixvim-options-summary.md" mdbook.nixvimOptions})"
+
+    substituteInPlace ./modules/hm.md \
+      --replace-fail "@HM_OPTIONS@" "$(cat ${mkMDDoc hmOptions})"
   '';
 in
   pkgs.stdenv.mkDerivation {

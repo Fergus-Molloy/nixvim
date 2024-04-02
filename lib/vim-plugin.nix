@@ -6,20 +6,22 @@
 with lib; {
   mkVimPlugin = config: {
     name,
-    namespace ? "plugins",
     url ?
       if defaultPackage != null
       then defaultPackage.meta.homepage
       else null,
     maintainers,
     imports ? [],
+    description ? null,
     # deprecations
     deprecateExtraConfig ? false,
     optionsRenamedToSettings ? [],
+    # colorscheme
+    isColorscheme ? false,
+    colorscheme ? name,
     # options
     originalName ? name,
     defaultPackage ? null,
-    options ? {},
     settingsOptions ? {},
     settingsExample ? null,
     globalPrefix ? "",
@@ -29,32 +31,14 @@ with lib; {
     extraPlugins ? [],
     extraPackages ? [],
   }: let
+    namespace =
+      if isColorscheme
+      then "colorschemes"
+      else "plugins";
+
     cfg = config.${namespace}.${name};
 
-    # TODO support nested options!
-    pluginOptions =
-      mapAttrs
-      (
-        optName: opt:
-          opt.option
-      )
-      options;
-
-    globalsFromOptions =
-      mapAttrs'
-      (optName: opt: {
-        name =
-          if opt.global == null
-          then optName
-          else opt.global;
-        value = cfg.${optName};
-      })
-      options;
-    globalsFromSettings =
-      if (hasAttr "settings" cfg) && (cfg.settings != null)
-      then cfg.settings
-      else {};
-    globals = globalsFromOptions // globalsFromSettings;
+    globals = cfg.settings or {};
 
     # does this evaluate package?
     packageOption =
@@ -88,7 +72,11 @@ with lib; {
     meta = {
       inherit maintainers;
       nixvimInfo = {
-        inherit name url;
+        inherit
+          description
+          name
+          url
+          ;
         kind = namespace;
       };
     };
@@ -98,7 +86,6 @@ with lib; {
       }
       // settingsOption
       // packageOption
-      // pluginOptions
       // extraOptions;
 
     imports = let
@@ -143,24 +130,11 @@ with lib; {
             # does this evaluate package? it would not be desired to evaluate package if we use another package.
             extraPlugins = extraPlugins ++ optional (defaultPackage != null) cfg.package;
           }
+          (optionalAttrs (isColorscheme && (colorscheme != null)) {
+            inherit colorscheme;
+          })
           (extraConfig cfg)
         ]
       );
-  };
-
-  mkDefaultOpt = {
-    type,
-    global ? null,
-    description ? null,
-    example ? null,
-    default ? null,
-    ...
-  }: {
-    option = mkOption {
-      type = types.nullOr type;
-      inherit default description example;
-    };
-
-    inherit global;
   };
 }

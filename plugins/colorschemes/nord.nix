@@ -6,8 +6,8 @@
   ...
 }:
 helpers.vim-plugin.mkVimPlugin config {
-  namespace = "colorschemes";
   name = "nord";
+  isColorscheme = true;
   originalName = "nord.nvim";
   defaultPackage = pkgs.vimPlugins.nord-nvim;
   globalPrefix = "nord_";
@@ -60,9 +60,5 @@ helpers.vim-plugin.mkVimPlugin config {
     borders = true;
     disable_background = true;
     italic = false;
-  };
-
-  extraConfig = cfg: {
-    colorscheme = "nord";
   };
 }

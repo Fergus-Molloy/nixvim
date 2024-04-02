@@ -58,25 +58,19 @@
         unpackaged =
           [
             "blade_formatter"
-            "blue"
-            "brittany"
             "bsfmt"
             "bslint"
             "cljstyle"
             "cueimports"
-            "curlylint"
-            "dtsfmt"
+            # As of 2024-03-22, pkgs.d2 is broken
+            # TODO: re-enable this test when fixed
+            "d2_fmt"
             "erb_lint"
-            "fixjson"
+            "findent"
             "forge_fmt"
             "gccdiag"
             "gersemi"
-            "gospel"
-            "jshint"
-            "jsonlint"
-            "markdown_toc"
             "markuplint"
-            "misspell"
             "mlint"
             "nginx_beautifier"
             "npm_groovy_lint"
@@ -85,60 +79,47 @@
             "perlimports"
             "pint"
             "pretty_php"
-            "puglint"
             "purs_tidy"
-            "pyflyby"
             "pyink"
-            "pyproject_flake8"
             "reek"
             "regal"
             "remark"
             "rescript"
             "saltlint"
-            "semistandardjs"
             "solhint"
             "spectral"
             "sqlfmt"
             "sql_formatter"
-            "standardjs"
-            "standardrb"
-            "standardts"
             "styler"
             "stylint"
             "swiftformat"
             "swiftlint"
-            "terrafmt"
             "textidote"
             "textlint"
             "twigcs"
             "vacuum"
-            "xo"
             "yamlfix"
           ]
           ++ (
             pkgs.lib.optionals
             (pkgs.stdenv.isDarwin && pkgs.stdenv.isx86_64)
             [
+              # As of 2024-03-27, pkgs.graalvm-ce (a dependency of pkgs.clj-kondo) is broken on x86_64-darwin
+              # TODO: re-enable this test when fixed
+              "clj_kondo"
               "rubyfmt"
-              # Currently broken
-              "lua_format"
-              # Currently broken
-              "zigfmt"
             ]
           )
           ++ (
             pkgs.lib.optionals
             pkgs.stdenv.isDarwin
             [
-              "rpmspec"
               "clazy"
               "gdformat"
               "gdlint"
               "haml_lint"
               "verilator"
               "verible_verilog_format"
-              # Broken due to a dependency
-              "jsonnetfmt"
             ]
           )
           ++ (

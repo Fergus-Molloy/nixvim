@@ -220,7 +220,7 @@ in {
 
         diagnosticsIndicator =
           helpers.defaultNullOpts.mkLuaFn "null"
-          "Either `null` or a function that returns the diagnistics indicator.";
+          "Either `null` or a function that returns the diagnostics indicator.";
 
         diagnosticsUpdateInInsert =
           helpers.defaultNullOpts.mkBool true
@@ -347,7 +347,7 @@ in {
         cfg.package
         nvim-web-devicons
       ];
-      options.termguicolors = true;
+      opts.termguicolors = true;
       extraConfigLua = ''
         require('bufferline').setup${helpers.toLuaObject setupOptions}
       '';

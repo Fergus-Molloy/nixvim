@@ -102,11 +102,13 @@
           emmet_ls.enable = true;
           eslint.enable = true;
           elixirls.enable = true;
+          fortls.enable = true;
           # pkgs.fsautocomplete only supports linux platforms
           fsautocomplete.enable = pkgs.stdenv.isLinux;
           futhark-lsp.enable = true;
           gleam.enable = true;
           gopls.enable = true;
+          golangci-lint-ls.enable = true;
           graphql.enable = true;
           helm-ls.enable = true;
           hls.enable = true;
@@ -123,8 +125,7 @@
           marksman.enable = true;
           metals.enable = true;
           nil_ls.enable = true;
-          # TODO As of 2024-03-10, nixd is broken (see https://github.com/nix-community/nixd/issues/357)
-          nixd.enable = false;
+          nixd.enable = true;
           nushell.enable = true;
           ocamllsp.enable = true;
           ols.enable =
@@ -147,7 +148,6 @@
           # https://github.com/mtshiba/pylyzer/issues/78
           pylyzer.enable = false;
           pyright.enable = true;
-          rnix-lsp.enable = false; # Deprecated
           ruff-lsp.enable = true;
           rust-analyzer = {
             enable = true;
@@ -159,6 +159,7 @@
           # As of 2024-03-11, sourcekit-lsp is broken on aarch64
           # TODO: re-enable this test when fixed
           sourcekit.enable = !pkgs.stdenv.isAarch64;
+          sqls.enable = true;
           svelte.enable = true;
           tailwindcss.enable = true;
           taplo.enable = true;
@@ -169,6 +170,7 @@
           typos-lsp.enable = true;
           typst-lsp.enable = true;
           vala-ls.enable = true;
+          vhdl-ls.enable = true;
           vls.enable = true;
           vuels.enable = true;
           yamlls.enable = true;

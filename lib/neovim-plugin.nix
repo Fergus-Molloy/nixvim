@@ -32,13 +32,16 @@ with lib; rec {
 
   mkNeovimPlugin = config: {
     name,
-    namespace ? "plugins",
     maintainers,
     url ? defaultPackage.meta.homepage,
     imports ? [],
+    description ? null,
     # deprecations
     deprecateExtraOptions ? false,
     optionsRenamedToSettings ? [],
+    # colorscheme
+    isColorscheme ? false,
+    colorscheme ? name,
     # options
     originalName ? name,
     defaultPackage,
@@ -51,11 +54,20 @@ with lib; rec {
     extraPlugins ? [],
     extraPackages ? [],
     callSetup ? true,
-  }: {
+  }: let
+    namespace =
+      if isColorscheme
+      then "colorschemes"
+      else "plugins";
+  in {
     meta = {
       inherit maintainers;
       nixvimInfo = {
-        inherit name url;
+        inherit
+          description
+          name
+          url
+          ;
         kind = namespace;
       };
     };
@@ -108,6 +120,10 @@ with lib; rec {
 
     config = let
       cfg = config.${namespace}.${name};
+      extraConfigNamespace =
+        if isColorscheme
+        then "extraConfigLuaPre"
+        else "extraConfigLua";
     in
       mkIf cfg.enable (
         mkMerge [
@@ -115,10 +131,13 @@ with lib; rec {
             extraPlugins = [cfg.package] ++ extraPlugins;
             inherit extraPackages;
 
-            extraConfigLua = optionalString callSetup ''
+            ${extraConfigNamespace} = optionalString callSetup ''
               require('${luaName}').setup(${toLuaObject cfg.settings})
             '';
           }
+          (optionalAttrs (isColorscheme && (colorscheme != null)) {
+            inherit colorscheme;
+          })
           (extraConfig cfg)
         ]
       );

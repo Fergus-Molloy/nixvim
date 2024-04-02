@@ -5,87 +5,49 @@
   pkgs,
   ...
 }:
-with lib; let
-  basePluginPath = ["plugins" "indent-blankline"];
-in {
-  # TODO: Those warnings were introduced on 2023/10/17.
-  # Please, remove in early December 2023.
-  imports =
-    # Removed options
-    (
-      map
-      (
-        optionName:
-          mkRemovedOptionModule
-          (basePluginPath ++ [optionName])
-          ''
-            Please use the new options.
-            See https://github.com/lukas-reineke/indent-blankline.nvim.
-          ''
-      )
-      [
-        "charBlankline"
-        "charList"
-        "charListBlankline"
-        "charHighlightList"
-        "spaceCharBlankline"
-        "spaceCharHighlightList"
-        "spaceCharBlanklineHighlightList"
-        "useTreesitter"
-        "indentLevel"
-        "maxIndentIncrease"
-        "showFirstIndentLevel"
-        "showEndOfLine"
-        "showFoldtext"
-        "disableWithNolist"
-        "filetype"
-        "bufnameExclude"
-        "strictTabs"
-        "showCurrentContextStartOnCurrentLine"
-        "contextCharBlankline"
-        "contextCharListBlankline"
-        "charPriority"
-        "contextStartPriority"
-        "contextPatterns"
-        "useTreesitterScope"
-        "contextPatternHighlight"
-        "disableWarningMessage"
-      ]
-    )
-    # New options
-    ++ (
-      mapAttrsToList
-      (
-        oldName: newPath:
-          mkRenamedOptionModule
-          (basePluginPath ++ [oldName])
-          (basePluginPath ++ newPath)
-      )
-      {
-        char = ["indent" "char"];
-        showCurrentContext = ["scope" "enabled"];
-        showTrailingBlanklineIndent = ["whitespace" "removeBlanklineTrail"];
-        filetypeExclude = ["exclude" "filetypes"];
-        buftypeExclude = ["exclude" "buftypes"];
-        showCurrentContextStart = ["scope" "showStart"];
-        contextChar = ["scope" "char"];
-        contextCharList = ["scope" "char"];
-        contextHighlightList = ["scope" "highlight"];
-      }
-    );
+with lib;
+  helpers.neovim-plugin.mkNeovimPlugin config {
+    name = "indent-blankline";
+    originalName = "indent-blankline.nvim";
+    luaName = "ibl";
+    defaultPackage = pkgs.vimPlugins.indent-blankline-nvim;
 
-  options.plugins.indent-blankline =
-    helpers.neovim-plugin.extraOptionsOptions
-    // {
-      enable = mkEnableOption "indent-blankline.nvim";
+    maintainers = [maintainers.GaetanLepage];
 
-      package = helpers.mkPackageOption "indent-blankline" pkgs.vimPlugins.indent-blankline-nvim;
+    # TODO introduced 2024-03-10: remove 2024-05-10
+    deprecateExtraOptions = true;
+    optionsRenamedToSettings = [
+      "debounce"
+      ["viewportBuffer" "min"]
+      ["viewportBuffer" "max"]
+      ["indent" "char"]
+      ["indent" "tabChar"]
+      ["indent" "highlight"]
+      ["indent" "smartIndentCap"]
+      ["indent" "priority"]
+      ["whitespace" "highlight"]
+      ["whitespace" "removeBlanklineTrail"]
+      ["scope" "enabled"]
+      ["scope" "char"]
+      ["scope" "showStart"]
+      ["scope" "showEnd"]
+      ["scope" "showExactScope"]
+      ["scope" "injectedLanguages"]
+      ["scope" "highlight"]
+      ["scope" "priority"]
+      ["scope" "include" "nodeType"]
+      ["scope" "exclude" "language"]
+      ["scope" "exclude" "nodeType"]
+      ["exclude" "filetypes"]
+      ["exclude" "buftypes"]
+    ];
 
+    settingsOptions = {
       debounce = helpers.defaultNullOpts.mkUnsignedInt 200 ''
         Sets the amount indent-blankline debounces refreshes in milliseconds.
       '';
 
-      viewportBuffer = {
+      viewport_buffer = {
         min = helpers.defaultNullOpts.mkUnsignedInt 30 ''
           Minimum number of lines above and below of what is currently visible in the window for
           which indentation guides will be generated.
@@ -103,7 +65,7 @@ in {
           Each character has to have a display width of 0 or 1.
         '';
 
-        tabChar = helpers.mkNullOrOption (with types; either str (listOf str)) ''
+        tab_char = helpers.mkNullOrOption (with types; either str (listOf str)) ''
           Character, or list of characters, that get used to display the indentation guide for tabs.
           Each character has to have a display width of 0 or 1.
 
@@ -117,7 +79,7 @@ in {
           Default: `|hl-IblIndent|`
         '';
 
-        smartIndentCap = helpers.defaultNullOpts.mkBool true ''
+        smart_indent_cap = helpers.defaultNullOpts.mkBool true ''
           Caps the number of indentation levels by looking at the surrounding code.
         '';
 
@@ -133,7 +95,7 @@ in {
           Default: `|hl-IblWhitespace|`
         '';
 
-        removeBlanklineTrail = helpers.defaultNullOpts.mkBool true ''
+        remove_blankline_trail = helpers.defaultNullOpts.mkBool true ''
           Removes trailing whitespace on blanklines.
 
           Turn this off if you want to add background color to the whitespace highlight group.
@@ -151,21 +113,21 @@ in {
           Default: `indent.char`
         '';
 
-        showStart = helpers.defaultNullOpts.mkBool true ''
+        show_start = helpers.defaultNullOpts.mkBool true ''
           Shows an underline on the first line of the scope.
         '';
 
-        showEnd = helpers.defaultNullOpts.mkBool true ''
+        show_end = helpers.defaultNullOpts.mkBool true ''
           Shows an underline on the last line of the scope.
         '';
 
-        showExactScope = helpers.defaultNullOpts.mkBool false ''
+        show_exact_scope = helpers.defaultNullOpts.mkBool false ''
           Shows an underline on the first line of the scope starting at the exact start of the scope
           (even if this is to the right of the indent guide) and an underline on the last line of
           the scope ending at the exact end of the scope.
         '';
 
-        injectedLanguages = helpers.defaultNullOpts.mkBool true ''
+        injected_languages = helpers.defaultNullOpts.mkBool true ''
           Checks for the current scope in injected treesitter languages.
           This also influences if the scope gets excluded or not.
         '';
@@ -181,7 +143,7 @@ in {
         '';
 
         include = {
-          nodeType = helpers.defaultNullOpts.mkNullable (with types; attrsOf (listOf str)) "{}" ''
+          node_type = helpers.defaultNullOpts.mkAttrsOf (with types; listOf str) "{}" ''
             Map of language to a list of node types which can be used as scope.
 
             - Use `*` as the language to act as a wildcard for all languages.
@@ -190,13 +152,12 @@ in {
         };
 
         exclude = {
-          language = helpers.defaultNullOpts.mkNullable (with types; listOf str) "[]" ''
+          language = helpers.defaultNullOpts.mkListOf types.str "[]" ''
             List of treesitter languages for which scope is disabled.
           '';
 
-          nodeType =
-            helpers.defaultNullOpts.mkNullable
-            (with types; attrsOf (listOf str))
+          node_type =
+            helpers.defaultNullOpts.mkAttrsOf (with types; (listOf str))
             ''
               {
                 "*" = ["source_file" "program"];
@@ -214,8 +175,7 @@ in {
 
       exclude = {
         filetypes =
-          helpers.defaultNullOpts.mkNullable
-          (with types; listOf str)
+          helpers.defaultNullOpts.mkListOf types.str
           ''
             [
               "lspinfo"
@@ -232,8 +192,7 @@ in {
           "List of filetypes for which indent-blankline is disabled.";
 
         buftypes =
-          helpers.defaultNullOpts.mkNullable
-          (with types; listOf str)
+          helpers.defaultNullOpts.mkListOf types.str
           ''
             [
               "terminal"
@@ -246,65 +205,27 @@ in {
       };
     };
 
-  config = let
-    cfg = config.plugins.indent-blankline;
-  in
-    mkIf cfg.enable {
-      extraPlugins = [cfg.package];
-
-      extraConfigLua = let
-        setupOptions = with cfg;
-          {
-            enabled = true;
-            inherit debounce;
-            viewport_buffer = with viewportBuffer; {
-              inherit
-                min
-                max
-                ;
-            };
-            indent = with indent; {
-              inherit char;
-              tab_char = tabChar;
-              inherit highlight;
-              smart_indent_cap = smartIndentCap;
-              inherit priority;
-            };
-            whitespace = with whitespace; {
-              inherit highlight;
-              remove_blankline_trail = removeBlanklineTrail;
-            };
-            scope = with scope; {
-              inherit
-                enabled
-                char
-                ;
-              show_start = showStart;
-              show_end = showEnd;
-              show_exact_scope = showExactScope;
-              injected_languages = injectedLanguages;
-              inherit
-                highlight
-                priority
-                ;
-              include = with include; {
-                node_type = nodeType;
-              };
-              exclude = with exclude; {
-                inherit language;
-                node_type = nodeType;
-              };
-            };
-            exclude = with exclude; {
-              inherit
-                filetypes
-                buftypes
-                ;
-            };
-          }
-          // cfg.extraOptions;
-      in ''
-        require("ibl").setup(${helpers.toLuaObject setupOptions})
-      '';
+    settingsExample = {
+      indent = {
+        char = "│";
+      };
+      scope = {
+        show_start = false;
+        show_end = false;
+        show_exact_scope = true;
+      };
+      exclude = {
+        filetypes = [
+          ""
+          "checkhealth"
+          "help"
+          "lspinfo"
+          "packer"
+          "TelescopePrompt"
+          "TelescopeResults"
+          "yaml"
+        ];
+        buftypes = ["terminal" "quickfix"];
+      };
     };
-}
+  }

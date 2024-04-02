@@ -18,4 +18,34 @@
     githubId = 45051974;
     name = "Fergus Molloy";
   };
+  MattSturgeon = {
+    email = "matt@sturgeon.me.uk";
+    matrix = "@mattsturg:matrix.org";
+    github = "MattSturgeon";
+    githubId = 5046562;
+    name = "Matt Sturgeon";
+    keys = [
+      {fingerprint = "7082 22EA 1808 E39A 83AC  8B18 4F91 844C ED1A 8299";}
+    ];
+  };
+  DanielLaing = {
+    email = "daniel@daniellaing.com";
+    matrix = "@bodleum:matrix.org";
+    github = "Bodleum";
+    githubId = 60107449;
+    name = "Daniel Laing";
+    keys = [
+      {fingerprint = "0821 8B96 DC73 85E5 BB7C  A535 D264 3BD2 13BC 0FA8";}
+    ];
+  };
+  JanKremer = {
+    email = "mail@jankremer.eu";
+    matrix = "@jankremer:matrix.org";
+    github = "janurskremer";
+    githubId = 79042825;
+    name = "Jan Kremer";
+    keys = [
+      {fingerprint = "20AF 0A65 9F2B 93AD 9184  15D1 A7DA 689C B3B0 78EC";}
+    ];
+  };
 }
